@@ -1,13 +1,16 @@
 const webpackDevServer = require('webpack-dev-server');
 const webpack = require('webpack');
 const openBrowser = require('./open-browser');
-const config = require('../webpack.config.js');
+const makeConfig = require('../webpack.config.js');
+const { paths } = require('./paths');
+
 const options = {
-  contentBase: './dist',
+  contentBase: paths.build,
   hot: true,
   host: 'localhost',
 };
-
+const config = makeConfig({ mode: 'development' });
+console.log('config:', config);
 webpackDevServer.addDevServerEntrypoints(config, options);
 const compiler = webpack(config);
 const server = new webpackDevServer(compiler, options);

@@ -1,2 +1,2 @@
-log('HELLO 3');
-log('HELLO');
+log('HELLO 2');
+log(window);
