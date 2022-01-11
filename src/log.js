@@ -1,26 +1,5 @@
-import parserTypeScript from 'prettier/parser-typescript';
-import prettier from 'prettier/standalone';
 import { serialize } from './serialize';
 
-function w3CodeColor() {
-  var x,
-    i,
-    j,
-    k,
-    l,
-    modes = ['html', 'js', 'java', 'css', 'sql', 'python', 'kotlin'];
-  if (!document.getElementsByClassName) {
-    return;
-  }
-  k = modes.length;
-  for (j = 0; j < k; j++) {
-    x = document.getElementsByClassName(modes[j] + 'High');
-    l = x.length;
-    for (i = 0; i < l; i++) {
-      x[i].innerHTML = w3CodeColorize(x[i].innerHTML, modes[j]);
-    }
-  }
-}
 function w3CodeColorize(x, lang) {
   var tagcolor = 'mediumblue';
   var tagnamecolor = 'brown';
@@ -92,7 +71,9 @@ function w3CodeColorize(x, lang) {
     return pythonMode(x);
   }
   return x;
-  function extract(str, start, end, func, repl) {
+
+  // @eslint-disable
+  function Extract(str, start, end, func, repl) {
     var s,
       e,
       d = '',
@@ -125,9 +106,9 @@ function w3CodeColorize(x, lang) {
       endpos,
       note,
       i;
-    php = new extract(rest, '&lt;\\?php', '?&gt;', phpMode, 'W3PHPPOS');
+    php = new Extract(rest, '&lt;\\?php', '?&gt;', phpMode, 'W3PHPPOS');
     rest = php.rest;
-    comment = new extract(
+    comment = new Extract(
       rest,
       '&lt;!--',
       '--&gt;',
@@ -167,7 +148,7 @@ function w3CodeColorize(x, lang) {
       }
     }
     rest = done + rest;
-    angular = new extract(rest, '{{', '}}', angularMode);
+    angular = new Extract(rest, '{{', '}}', angularMode);
     rest = angular.rest;
     for (i = 0; i < comment.arr.length; i++) {
       rest = rest.replace('W3HTMLCOMMENTPOS', comment.arr[i]);
@@ -199,6 +180,7 @@ function w3CodeColorize(x, lang) {
       tagcolor +
       '>&lt;</span>' +
       result.substring(4);
+
     if (result.substr(result.length - 4, 4) == '&gt;') {
       result =
         result.substring(0, result.length - 4) +
@@ -300,7 +282,7 @@ function w3CodeColorize(x, lang) {
       midz,
       c,
       cc;
-    comment = new extract(rest, /\/\*/, '*/', commentMode, 'W3CSSCOMMENTPOS');
+    comment = new Extract(rest, /\/\*/, '*/', commentMode, 'W3CSSCOMMENTPOS');
     rest = comment.rest;
     while (rest.search('{') > -1) {
       s = rest.search('{');
@@ -1129,7 +1111,6 @@ function w3CodeColorize(x, lang) {
       sfnuttpos,
       dfnuttpos,
       compos,
-      comlinepos,
       comhashpos,
       keywordpos,
       mypos,
@@ -1941,6 +1922,10 @@ function w3CodeColorize(x, lang) {
 }
 
 const formatCode = (code) => {
+  /* eslint-disable-next-line @typescript-eslint/no-var-requires */
+  const prettier = require('prettier/standalone');
+  /* eslint-disable-next-line @typescript-eslint/no-var-requires */
+  const parserTypeScript = require('prettier/parser-typescript');
   const result = prettier.format(`const result=${code}`, {
     parser: 'typescript',
     plugins: [parserTypeScript],
@@ -1966,7 +1951,6 @@ const formatCode = (code) => {
 
 const showMessage = (text, removeDelay) => {
   const rootId = 'km-modal';
-  const textClassName = 'km-modal';
   let rootExist = document.getElementById(rootId);
   if (rootExist) {
     rootExist.remove();
@@ -2022,4 +2006,5 @@ export function log(...args) {
 
 if (window) {
   window.log = log;
+  window.l = log;
 }

@@ -5,17 +5,17 @@ const makeConfig = require('../webpack.config.js');
 const { paths } = require('./paths');
 
 const options = {
-  contentBase: paths.build,
+  // contentBase: paths.build,
   hot: true,
+  port: 3000,
   host: 'localhost',
 };
 const config = makeConfig({ mode: 'development' });
 console.log('config:', config);
-webpackDevServer.addDevServerEntrypoints(config, options);
 const compiler = webpack(config);
-const server = new webpackDevServer(compiler, options);
+const server = new webpackDevServer(options, compiler);
 
-server.listen(3000, 'localhost', () => {
+server.startCallback(() => {
   openBrowser('http://localhost:3000');
   console.log('dev server listening on port 3000');
 });

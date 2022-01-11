@@ -79,15 +79,18 @@ class Serialize {
   isDate(v: any): v is Node {
     return Object.prototype.toString.call(v) === '[object Date]';
   }
-  annotateFunction(str: any) {
-    let parts = str.toString().split('').reverse();
+  removeComments(str: string) {
+    return str.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '').trim();
+  }
+  annotateFunction(str: Function) {
+    let parts = this.removeComments(str.toString()).split('').reverse();
     let processed: string[] = [];
-    let curr: string;
+    let curr: unknown;
     let bracketsOpen = 0;
     let bracketsClosed = 0;
     let openCount = 0;
     let closedCount = 0;
-    let result: any;
+    let result: unknown;
 
     while ((curr = !result && parts.pop())) {
       if (curr === '(') {
@@ -96,7 +99,7 @@ class Serialize {
         closedCount += 1;
       }
       if (openCount > 0) {
-        processed.push(curr);
+        processed.push(curr as string);
         if (curr === '{') {
           bracketsOpen += 1;
         } else if (curr === '}') {
@@ -113,7 +116,7 @@ class Serialize {
     }
 
     return result
-      ? 'function'.concat(result).concat('{}')
+      ? 'function'.concat(result as string).concat('{}')
       : this.tryStringify(result);
   }
 
